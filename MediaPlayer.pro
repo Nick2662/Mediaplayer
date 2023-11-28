@@ -9,6 +9,8 @@ QT       += core gui
 QT	+= multimedia      #使用多媒体模块
 QT += multimediawidgets #使用QVideoWidget视频显示组件
 
+QT +=sql
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = MediaPlayer
@@ -31,6 +33,7 @@ SOURCES += main.cpp\
     Database.cpp
 
 HEADERS  += mainwindow.h \
+    Main.h \
     mediaobject.h \
     database.h
 

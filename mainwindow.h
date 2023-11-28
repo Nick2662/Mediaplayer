@@ -9,7 +9,9 @@
 #include <QDir>
 #include <QListWidgetItem>
 
+#include <Main.h>
 #include <mediaobject.h>
+#include <Database.h>
 
 namespace Ui {
 class MainWindow;
@@ -28,6 +30,9 @@ private:
 
    /*mediaInfo*/
    QVector<MediaObjectInfo> mediaObjectInfo;
+
+   /*DataBase*/
+   DataBase *db;
 
    /*mediaplayer, to play the meida*/
    QMediaPlayer *m_Player;

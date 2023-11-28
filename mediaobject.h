@@ -1,7 +1,7 @@
 #ifndef MEDIAOBJECT_H
 #define MEDIAOBJECT_H
 
-#include <QString>
+#include <Main.h>
 
 struct MediaObjectInfo
 {

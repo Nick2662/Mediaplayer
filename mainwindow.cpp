@@ -56,6 +56,10 @@ void MainWindow::mediaPlayerInit()
     m_PlayerWidget = new QVideoWidget;
     m_Player->setVideoOutput(m_PlayerWidget);
     ui->VideoOutput->addWidget(m_PlayerWidget);
+
+    //Database
+    db = new DataBase;
+    db->connectDatabase();
 }
 
 void MainWindow::iconInit()
