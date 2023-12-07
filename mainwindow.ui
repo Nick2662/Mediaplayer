@@ -188,9 +188,9 @@ QPushButton:hover
     <property name="geometry">
      <rect>
       <x>690</x>
-      <y>0</y>
+      <y>30</y>
       <width>261</width>
-      <height>481</height>
+      <height>451</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -200,6 +200,29 @@ QPushButton:hover
      </sizepolicy>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_search">
+    <property name="geometry">
+     <rect>
+      <x>879</x>
+      <y>-1</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Search</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>0</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -207,7 +230,7 @@ QPushButton:hover
      <x>0</x>
      <y>0</y>
      <width>949</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

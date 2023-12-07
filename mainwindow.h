@@ -12,6 +12,13 @@
 #include <Main.h>
 #include <mediaobject.h>
 #include <Database.h>
+#include "DownloadTool.h"
+
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonParseError>
+#include <QJsonObject>
+#include <QJsonArray>
 
 namespace Ui {
 class MainWindow;
@@ -65,8 +72,18 @@ public slots:
    void SliderChangde(void);
 
    void OnStateChange();
+
+   void databack(QNetworkReply *reply);
 private slots:
    void on_Playlist_itemDoubleClicked(QListWidgetItem *item);
+   void on_pushButton_search_clicked();
+
+private: //使用api
+   QNetworkAccessManager* manager;
+   QByteArray searchInfo;
+   int musicId,musicDuration,mvId;
+   QString musicName,singerName,albumName;
+
 };
 
 #endif // MAINWINDOW_H

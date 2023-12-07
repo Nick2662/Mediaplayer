@@ -11,6 +11,8 @@ QT += multimediawidgets #使用QVideoWidget视频显示组件
 
 QT +=sql
 
+QT += network #使用网络模块
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = MediaPlayer
@@ -30,12 +32,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    Database.cpp
+    Database.cpp \
+    DownloadTool.cpp
 
 HEADERS  += mainwindow.h \
     Main.h \
     mediaobject.h \
-    database.h
+    database.h \
+    DownloadTool.h
 
 FORMS    += mainwindow.ui
 

@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+ï»¿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QFileDialog>
@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_Player, &QMediaPlayer::stateChanged, [](QMediaPlayer::State newState){
         qDebug() << newState;
     });//test when mp3/mp4 stoped play the QMediaPlayer::State
+
+    connect(manager,SIGNAL(finished(QNetworkReply *)),this,SLOT(databack(QNetworkReply *)));
 }
 
 MainWindow::~MainWindow()
@@ -60,6 +62,13 @@ void MainWindow::mediaPlayerInit()
     //Database
     db = new DataBase;
     db->connectDatabase();
+
+    //network
+    manager = new QNetworkAccessManager;
+    QString version = QSslSocket::sslLibraryBuildVersionString();//"OpenSSL 1.1.1d  10 Sep 2019"
+    bool support = QSslSocket::supportsSsl();
+
+    qDebug() << manager->supportedSchemes()<<"version:"<<version<<"support:"<<support<<endl;
 }
 
 void MainWindow::iconInit()
@@ -89,12 +98,12 @@ void MainWindow::OnSetMediaFile()//choose media file
             info.filePath = QString::fromUtf8(mediaInfos.at(i).filePath().toUtf8().data());
             qDebug()<<"filepath:"<<info.filePath<<endl;
 
-            /* Ã½ÌåÁĞ±íÌí¼Ó¸èÇú */
+            /* Ã½ï¿½ï¿½ï¿½Ğ±ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ */
            if(OnSetPlaylist(info.filePath))
            {
-               /* Ìí¼Óµ½ÈİÆ÷Êı×éÀï´¢´æ */
+               /* ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï´¢ï¿½ï¿½ */
                mediaObjectInfo.append(info);
-               /* Ìí¼Ó¸èÇúÃû×ÖÖÁÁĞ±í */
+               /* ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½ */
                ui->Playlist->addItem(info.fileName);
            } else
            {
@@ -140,7 +149,7 @@ void MainWindow::OnAddMedia()
     //dialog.setDirectory("C:/Qt/Reposition/MediaPlayer/MusicRes");
     dialog.setFileMode(QFileDialog::AnyFile);
     //qDebug()<<"existDir1:"<<dialog.getExistingDirectory()<<"\n"<<" existDirUrl1: "<<dialog.getExistingDirectoryUrl();
-    QStringList fileNames;//ÊÇ·ñ¿ÉÒÔÊ¹ÓÃ·ÇÊı×é£¿£¿£¿£¿
+    QStringList fileNames;//ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã·ï¿½ï¿½ï¿½ï¿½é£¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 
     if (dialog.exec())
@@ -160,12 +169,12 @@ void MainWindow::OnAddMedia()
         info.filePath = file1.absoluteFilePath();
         qDebug()<<"filepath:"<<info.filePath<<endl;
 
-        /* Ã½ÌåÁĞ±íÌí¼Ó¸èÇú */
+        /* Ã½ï¿½ï¿½ï¿½Ğ±ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ */
        if(OnSetPlaylist(info.filePath))
        {
-           /* Ìí¼Óµ½ÈİÆ÷Êı×éÀï´¢´æ */
+           /* ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï´¢ï¿½ï¿½ */
            mediaObjectInfo.append(info);
-           /* Ìí¼Ó¸èÇúÃû×ÖÖÁÁĞ±í */
+           /* ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½ */
            ui->Playlist->addItem(info.fileName);
        } else
        {
@@ -200,12 +209,12 @@ void MainWindow::OnScanMedia()
             info.filePath = QString::fromUtf8(mediaInfos.at(i).filePath().toUtf8().data());
             qDebug()<<"filepath:"<<info.filePath<<endl;
 
-            /* Ã½ÌåÁĞ±íÌí¼Ó¸èÇú */
+            /* Ã½ï¿½ï¿½ï¿½Ğ±ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ */
            if(OnSetPlaylist(info.filePath))
            {
-               /* Ìí¼Óµ½ÈİÆ÷Êı×éÀï´¢´æ */
+               /* ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï´¢ï¿½ï¿½ */
                mediaObjectInfo.append(info);
-               /* Ìí¼Ó¸èÇúÃû×ÖÖÁÁĞ±í */
+               /* ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½ */
                ui->Playlist->addItem(info.fileName);
            } else
            {
@@ -244,7 +253,7 @@ void MainWindow::OnPrevious()
 {
     m_Player->stop();
     int count = m_Playerlist->mediaCount();
-    if(count == 0)//ÁĞ±íÎª¿Õ
+    if(count == 0)//ï¿½Ğ±ï¿½Îªï¿½ï¿½
     {
         return;
     }
@@ -267,9 +276,9 @@ void MainWindow::OnPlay()
     QIcon icon_pauseButton(":/icon/pause.png");
     switch (state) {
         case QMediaPlayer::StoppedState:
-            /* Ã½Ìå²¥·Å */
+            /* Ã½ï¿½å²¥ï¿½ï¿½ */
             m_Player->play();
-            /*ÉèÖÃ°´Å¥Í¼±ê*/
+            /*ï¿½ï¿½ï¿½Ã°ï¿½Å¥Í¼ï¿½ï¿½*/
             ui->ButPlay->setFlat(true);
             ui->ButPlay->setIcon(icon_pauseButton);
             qDebug()<<"\nseq:"<<m_Playerlist->currentIndex()<<endl;
@@ -277,9 +286,9 @@ void MainWindow::OnPlay()
             break;
 
         case QMediaPlayer::PlayingState:
-            /* Ã½ÌåÔİÍ£ */
+            /* Ã½ï¿½ï¿½ï¿½ï¿½Í£ */
             m_Player->pause();
-            /*ÉèÖÃ°´Å¥Í¼±ê*/
+            /*ï¿½ï¿½ï¿½Ã°ï¿½Å¥Í¼ï¿½ï¿½*/
             //QIcon icon_cdButton(":/images/cd.png");
             ui->ButPlay->setIcon(icon_playButton);
             break;
@@ -310,7 +319,7 @@ void MainWindow::OnNext()
 {
     m_Player->stop();
     int count = m_Playerlist->mediaCount();
-    if(count == 0)//ÁĞ±íÎª¿Õ
+    if(count == 0)//ï¿½Ğ±ï¿½Îªï¿½ï¿½
     {
         return;
     }
@@ -336,7 +345,7 @@ void MainWindow::SliderChangde()
     m_Player->setPosition(pos);
 }
 
-void MainWindow::OnStateChange() //ÓĞÎÊÌâ£¬ĞèÒªĞŞ¸Ä²¥·Å·½Ê½£¬¸ü¾ß²Ëµ¥ÁĞ±í²¥·Å
+void MainWindow::OnStateChange() //ï¿½ï¿½ï¿½ï¿½ï¿½â£¬ï¿½ï¿½Òªï¿½Ş¸Ä²ï¿½ï¿½Å·ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ß²Ëµï¿½ï¿½Ğ±ï¿½ï¿½ï¿½ï¿½ï¿½
 {
     qDebug()<<"new state:"<<m_Player->state();
     if((m_Player->state() == QMediaPlayer::StoppedState)&&(playlistIndex != m_Playerlist->currentIndex()) )
@@ -363,9 +372,106 @@ void MainWindow::OnStateChange() //ÓĞÎÊÌâ£¬ĞèÒªĞŞ¸Ä²¥·Å·½Ê½£¬¸ü¾ß²Ëµ¥ÁĞ±í²¥·Å
 
 }
 
+void MainWindow::databack(QNetworkReply *reply)
+{
+    searchInfo=reply->readAll();
+    QJsonParseError err;               //é”™è¯¯ä¿¡æ¯å¯¹è±¡
+    QJsonDocument json_recv = QJsonDocument::fromJson(searchInfo,&err);//å°†jsonæ–‡æœ¬è½¬æ¢ä¸º json æ–‡ä»¶å¯¹è±¡
+    if(err.error != QJsonParseError::NoError)             //åˆ¤æ–­æ˜¯å¦ç¬¦åˆè¯­æ³•
+    {
+        qDebug() <<"æœç´¢æ­Œæ›²Jsonè·å–æ ¼å¼é”™è¯¯"<< err.errorString();
+        return;
+    }
+    QJsonObject totalObject = json_recv.object();
+    QStringList keys = totalObject.keys();    // åˆ—å‡ºjsoné‡Œæ‰€æœ‰çš„key
+    if(keys.contains("result"))                 //å¦‚æœæœ‰ç»“æœ
+    {       //åœ¨ json æ–‡æœ¬ä¸­ {}èŠ±æ‹¬å·é‡Œé¢æ˜¯QJsonObjectå¯¹è±¡, []æ–¹æ‹¬å·é‡Œé¢æ˜¯QJsonArray
+
+        QJsonObject resultObject = totalObject["result"].toObject();     //å°±å°†å¸¦ result çš„å†…å®¹æå–åè½¬æ¢ä¸ºå¯¹è±¡
+        QStringList resultKeys = resultObject.keys();      //ä¿å­˜æ‰€æœ‰key
+        if(resultKeys.contains("songs"))                    //å¦‚æœ key ä¸ºsongs ,ä»£è¡¨æ‰¾åˆ°äº†æ­Œæ›²
+        {
+            QJsonArray array = resultObject["songs"].toArray();
+            for(auto i : array)                   //å¼€å§‹è·å–æ­Œæ›²ä¸­çš„ä¿¡æ¯
+            {
+                QJsonObject object = i.toObject();
+                musicId = object["id"].toInt();                         // éŸ³ä¹id
+                musicDuration = object["duration"].toInt();             // éŸ³ä¹é•¿åº¦
+                musicName = object["name"].toString();                  // éŸ³ä¹å
+                mvId = object["mvid"].toInt();                          // mvid
+                QStringList artistsKeys = object.keys();
+                if(artistsKeys.contains("artists"))                //å¦‚æœresultä¸­åŒ…å«äº† artists
+                {
+                    QJsonArray artistsArray = object["artists"].toArray();   //å°† artist çš„å†…å®¹æå–åä¿å­˜
+                    for(auto j : artistsArray)
+                    {
+                        QJsonObject object2 = j.toObject();
+                        singerName = object2["name"].toString();         // æ­Œæ‰‹å
+                    }
+                }
+                if(artistsKeys.contains("album"))                //åŒ…å«äº†ä¸“è¾‘
+                {
+                    QJsonObject albumObjct = object["album"].toObject();
+                    albumName = albumObjct["name"].toString();            // ä¸“è¾‘å
+                }
+                qDebug()<<"éŸ³ä¹IDï¼š"<<QString::number(musicId)<<"éŸ³ä¹åï¼š"<<musicName<<"æ­Œæ‰‹åï¼š"<<singerName
+                       <<"æ€»æ—¶é•¿ï¼š"<<QString::number(musicDuration)<<"ä¸“è¾‘åï¼š"<<albumName<<endl;
+
+                QString url;
+                url=QString("https://music.163.com/song/media/outer/url?id=%0").arg(musicId);
+
+                MediaObjectInfo info;
+                info.fileName = musicName + "-" + singerName + ".mp3";
+                qDebug()<<"filename:"<<info.fileName<<endl;
+                info.filePath = url + ".mp3";
+                qDebug()<<"filepath:"<<info.filePath<<endl;
+
+                /* Ã½ï¿½ï¿½ï¿½Ğ±ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ */
+               if(m_Playerlist->addMedia(QUrl(url)))
+               {
+                   /* ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï´¢ï¿½ï¿½ */
+                   mediaObjectInfo.append(info);
+                   /* ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½ */
+                   ui->Playlist->addItem(info.fileName);
+               } else
+               {
+                   qDebug()<< m_Playerlist->errorString().toUtf8().data()  << endl;
+                   qDebug()<< " Error number:" << m_Playerlist->error() << endl;
+
+               }
+
+               DownloadTool* dT;
+               dT = new DownloadTool(info.filePath, QApplication::applicationDirPath() + "/download", info.fileName);
+               dT->startDownload();
+
+                /*
+                     ui->music_m->appendPlainText("éŸ³ä¹IDï¼š"+QString::number(musicId));
+                     ui->music_m->appendPlainText("éŸ³ä¹åï¼š"+musicName);
+                     ui->music_m->appendPlainText("æ­Œæ‰‹åï¼š"+singerName);
+                     ui->music_m->appendPlainText("æ€»æ—¶é•¿ï¼š"+QString::number(musicDuration));
+                     ui->music_m->appendPlainText("ä¸“è¾‘åï¼š"+albumName);*/
+            }
+        }
+    }
+
+
+    //playlist->addMedia(QUrl(url));                     //æ·»åŠ è¿”å›çš„éŸ³ä¹åˆ°æ’­æ”¾åˆ—è¡¨ä¸­
+    //ui->plainTextEdit->appendPlainText(musicName); //ç”¨äºæ˜¾ç¤º
+}
+
 void MainWindow::on_Playlist_itemDoubleClicked(QListWidgetItem *item)
 {
     m_Player->stop();
     m_Playerlist->setCurrentIndex(ui->Playlist->row(item));
     m_Player->play();
+}
+
+void MainWindow::on_pushButton_search_clicked()
+{
+    QString str,s;
+    s = ui->lineEdit->text();
+    str = "http://music.163.com/api/search/get/web?csrf_token=hlpretag=&hlposttag=&s={"+s+"}&type=1&offset=0&total=true&limit=1";
+    QNetworkRequest request;          //å®šä¹‰ä¸€ä¸ªè¯·æ±‚å¯¹è±¡
+    request.setUrl(str);      //å°†è¯·æ±‚æ ¼å¼è®¾ç½®ç»™è¯·æ±‚å¯¹è±¡
+    manager->get(request);              //è¯·æ±‚
 }
